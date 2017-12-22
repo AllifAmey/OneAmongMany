@@ -43,6 +43,8 @@ movement - limited but can be upgraded.
 
 
 import pygame
+from Player_test import *
+import level_art
 
 pygame.init()
 
@@ -52,16 +54,18 @@ WeirdColor = pygame.color.Color("#1c6bea")
 pygame.display.set_caption("OneAmongMany")
 screen = pygame.display.set_mode(screenSize)
 
-game_loop = True
-
-while game_loop == True:
+while user.game_loop == True:
 
     screen.fill(WeirdColor)
+    #after alot of testing, I realize the problem is:  You can't have 2 event handling loops.
+    #https://stackoverflow.com/questions/42888013/why-can-pygame-event-get-only-be-called-once-per-frame
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            game_loop = False
-
+    user.player_movements()
+    user.player_x += user.player_x_move
+    user.player_y += user.player_y_move
+    user.player_movements()
     pygame.display.flip()
+    clock.tick(30)
 
 pygame.quit()
+quit()

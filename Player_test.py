@@ -98,7 +98,7 @@ user.key_check = 0
 user.jump = False
 user.jump_check = 0
 
-
+"""
 while user.game_loop == True:
 
     screen.fill(WeirdColor)
@@ -113,3 +113,4 @@ while user.game_loop == True:
 
 pygame.quit()
 quit()
+"""
