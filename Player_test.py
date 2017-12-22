@@ -1,6 +1,6 @@
+
 import pygame
 import numpy
-import random
 pygame.init()
 
 screenSize = (640, 480)
@@ -9,6 +9,7 @@ clock = pygame.time.Clock()
 
 pygame.display.set_caption("Player_testing")
 screen = pygame.display.set_mode(screenSize)
+
 class player:
     """Here we will test the movement and projectiles/potential."""
     def __init__(self):
@@ -80,7 +81,7 @@ class player:
                 self.jumpy = 340
                 self.jump = False
                 self.jump_check = 0
-
+"""
 game_loop = True
 
 user = player()
@@ -98,7 +99,7 @@ user.key_check = 0
 user.jump = False
 user.jump_check = 0
 
-"""
+
 while user.game_loop == True:
 
     screen.fill(WeirdColor)
@@ -113,4 +114,5 @@ while user.game_loop == True:
 
 pygame.quit()
 quit()
+
 """
