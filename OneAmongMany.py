@@ -57,17 +57,6 @@ screen = pygame.display.set_mode(screenSize)
 user = player()
 
 #player_movement
-user.player_x = 320
-user.player_y = 340
-user.player_x_move = 0
-user.player_y_move = 0
-user.jumpx = 0
-user.jumpy = 340
-user.y = 0
-user.x = 0
-user.key_check = 0
-user.jump = False
-user.jump_check = 0
 
 while user.game_loop == True:
 

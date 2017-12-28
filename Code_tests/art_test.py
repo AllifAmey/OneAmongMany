@@ -29,23 +29,29 @@ class arena(colours):
         #allows the continued repetition of 2 or more pieces of music.
         Music_1 = pygame.mixer.Sound("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Arena.ogg")
         Music_2 = pygame.mixer.Sound("C:/Users/Al-lif/PycharmProjects/Pygame/Music/TransitionToInsanity.ogg")
-        pygame.mixer.set_num_channels(8)
+        #Music_3 = pygame.mixer.music.load("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Almost_done.mp3")
+        #Music_4 = pygame.mixer.music.load("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Pec.mp3")
+
+        pygame.mixer.set_num_channels(2)
 
         Arena_music1 = pygame.mixer.Channel(1)
 
         #music logic.
-        if Arena_music1.get_busy() == False:
+        if Arena_music1.get_busy() == False and pygame.mixer.music.get_busy() == False:
             if self.music_check == 1:
                 Arena_music1.play(Music_1)
                 self.music_check = 2
             elif self.music_check == 2:
                 Arena_music1.play(Music_2)
+                self.music_check = 3
+            elif self.music_check == 3:
+                pygame.mixer.music.load("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Pec.mp3")
+                pygame.mixer.music.play(1)
+                self.music_check = 4
+            elif self.music_check == 4:
+                pygame.mixer.music.load("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Almost_done.mp3")
+                pygame.mixer.music.play(1)
                 self.music_check = 1
-
-
-        if self.music_start == 5:
-            self.music_start = 0
-            Arena_music1.play(Music_1)
 
 class intro(colours):
 
@@ -87,5 +93,6 @@ while game_loop == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_loop = False
+
 
 pygame.quit()

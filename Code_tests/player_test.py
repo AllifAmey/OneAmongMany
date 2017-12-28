@@ -4,11 +4,12 @@ import random
 pygame.init()
 
 screenSize = (640, 480)
-WeirdColor = pygame.color.Color("#1c6bea")
+WeirdColor = pygame.color.Color(0,255,0)
 clock = pygame.time.Clock()
 
 pygame.display.set_caption("OneAmongMany")
 screen = pygame.display.set_mode(screenSize)
+
 class Enemy:
     """Here we will test Enemy spawn times."""
     def __init__(self):
@@ -153,8 +154,6 @@ class player(Enemy):
                 self.jumpy = 340
                 self.jump = False
                 self.jump_check = 0
-
-
 game_loop = True
 
 user = player()
@@ -172,10 +171,12 @@ user.key_check = 0
 user.jump = False
 user.jump_check = 0
 #enemy_movement
+"""
 user.enemy_x = 270
 user.enemy_y = 360
 user.move_check = 0
 user.enemy_spawn = 0
+"""
 while user.game_loop == True:
 
     screen.fill(WeirdColor)
@@ -185,7 +186,6 @@ while user.game_loop == True:
     user.player_x += user.player_x_move
     user.player_y += user.player_y_move
     user.player_movements()
-    user.Enemyspawn()
     pygame.display.flip()
     clock.tick(30)
 
