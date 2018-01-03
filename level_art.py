@@ -36,8 +36,7 @@ class InstanceArt:
 
     def __init__(self):
         #colours?
-        self.dark_purple = pygame.color.Color("#f9f968")
-        self.light_purple = None
+        self.Aquamarine = pygame.color.Color("#7fffd4")
         #Images
         self.intro = pygame.image.load("C:/Users/Al-lif/PycharmProjects/Pygame/Art/Intro_background.jpg").convert()
         self.intro_door = pygame.image.load("C:/Users/Al-lif/PycharmProjects/Pygame/Art/Intro_door.png").convert()
@@ -48,6 +47,19 @@ class InstanceArt:
         self.ImageFade_check = False
         self.ImageFade_plus = 0.05
         self.Image_init = "Temp"
+
+    def Skipmaster(self,Skip):
+        """For debugging."""
+        return Skip
+
+    def text(self,text,screen,Coordinates, text_colour, text_size = 20):
+        """Enables the use of text."""
+        background = pygame.Surface((50,50))
+        text_object = pygame.font.Font("Intro_text.ttf",text_size)
+        text_object = text_object.render(text, True ,(text_colour))
+        x = Coordinates[0]
+        y = Coordinates[1]
+        screen.blit(text_object,(x,y))
 
     def Intro(self,screen):
         """Art for Intro."""
@@ -63,29 +75,26 @@ class InstanceArt:
             self.intro_door.set_alpha(self.ImageFade)
             screen.blit(self.intro_door,(620,345))
 
-    def blit_alpha(self, target, source, location, opacity):
-        x = location[0]
-        y = location[1]
-        temp = pygame.Surface((source.get_width(), source.get_height())).convert()
-        temp.blit(target, (-x, -y))
-        temp.blit(source, (0, 0))
-        temp.set_alpha(opacity)
-        target.blit(temp, location)
+    def Intro_fading(self,screen):
 
-    def intro_fade(self,screen):
-        print("hello")
-        #screen.fill((0, 0, 0))
-        """
         if self.Image_init == "Temp":
             self.Image_init = "Catnoise"
-            self.ImageFade = 255
+            self.ImageFade = 200
+            self.ImageFade_plus = 0.5
+
+        self.ImageFade -= self.ImageFade_plus
 
         if self.ImageFade <= 0:
             self.ImageFade = 0
 
-        self.ImageFade -= self.ImageFade_plus + 5
+        screen.set_alpha(self.ImageFade)
         print(self.ImageFade)
-        """
+        screen.fill((0,0,0))
+        self.intro.set_alpha(self.ImageFade)
+        self.TempSurface = pygame.Surface((640,480)).convert()
+        self.TempSurface.blit(self.intro, (0,0))
+        screen.blit(self.TempSurface, (0,0))
+
 
     def intro_interaction(self):
         """Interaction for Intro"""
@@ -104,8 +113,13 @@ class InstanceArt:
 
 
 
-    def GrabtheKey(self):
+    def GrabtheKey(self,screen, status="pre-level"):
         """Art and interaction for 1st level"""
+        if status == "pre-level":
+            """Here we will perhaps create the scene of the player falling from the sky."""
+            screen.fill((255,0,0))
+            pygame.draw.rect(screen, (0,255,0),(0,460, 640,20))
+
         pass
     def RightColour(self):
         """Art and interactions for 2nd level"""
@@ -128,14 +142,14 @@ class InstanceArt:
                     pygame.mixer.music.play(-1)
                 self.musicTemp = "Temp"
             if self.music_check == 2:
+                pygame.mixer.music.set_volume(0.5)
                 if pygame.mixer.music.get_busy() == True and self.musicTemp == "Temp":
-                    Voice1 = pygame.mixer.Sound("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Voice1.ogg")
+                    Voice1 = pygame.mixer.Sound("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Intro_voice2.ogg")
                     pygame.mixer.music.stop()
-                    pygame.mixer.music.load("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Puzzle_1_1.mp3")
+                    pygame.mixer.music.load("C:/Users/Al-lif/PycharmProjects/Pygame/Music/Intro_2.mp3")
                     pygame.mixer.music.play(-1)
-                    #Intro_fadeout.play(Voice1)
+                    Intro_fadeout.play(Voice1)
                     self.musicTemp = "Temp1"
-
         elif level == "tutorial":
             pass
 
@@ -157,17 +171,20 @@ while user.game_loop == True:
         #You need an event handling loop or you will crash.
         instancemaster.Intro(screen)
         instancemaster.Music_list("intro")
-
         if instancemaster.ImageFade >= 40:
             instancemaster.ImageFade_plus = 1
             user.player_movements(screen)
             user.player_x += user.player_x_move
             user.player_y += user.player_y_move
             user.player_movements(screen)
+            if user.jumpy == 340:
+                instancemaster.text("I'm alive!", screen, (user.player_x- 10, user.player_y - 25), (0,0,0), 10)
+            else:
+                instancemaster.text("Weee!", screen, (user.player_x + 10, user.jumpy - 25), (0,0,0), 10)
+
             #door interaction.
             if user.player_x >= 580 and user.player_y >= 290:
-                #screen.fill((0,0,0))
-                #print(self.ImageFade)
+
                 instance = 0.5
         else:
             instancemaster.intro_interaction()
@@ -175,81 +192,28 @@ while user.game_loop == True:
 
         pass
     elif instance == 0.5:
-        """
-        This is the strangest error I have received. Apprantly there is an issue with the intro_fade() method.
-        Even when intro_fade() contains screen.fill((0 , 0, 0)), it will return an error: 
-        "TypeError: 'pygame.Surface' object is not callable"
-        But when I do screen.fill((0, 0, 0)) without calling the method, I receieve no error. 
-        In conclusion, to solve this problem I will have to "fix" the method intro_fade(). Perhaps a rename is in order.
-        """
-
         #screen.fill((0 , 0, 0))
-        instancemaster.intro_fade(screen)
+        if instancemaster.ImageFade == 0:
+            instance = 0.75
+        instancemaster.Intro_fading(screen)
         instancemaster.music_check = 2
         instancemaster.Music_list("intro")
         instancemaster.intro_interaction()
 
-
+    elif instance == 0.75:
+        instancemaster.GrabtheKey(screen)
+        instancemaster.intro_interaction()
+        user.physics_jump(screen)
+        if user.FallIteration == 4:
+            user.player_x = 220
+            user.player_y = 413
+            instance = 1
     elif instance == 1:
-
-        user.player_movements(screen)
-        user.player_x += user.player_x_move
-        user.player_y += user.player_y_move
-        user.player_movements(screen)
-
-
+        screen.blit(user.player_right, (user.player_x,user.player_y))
+        instancemaster.intro_interaction()
     pygame.display.flip()
     clock.tick(30)
 
 pygame.quit()
 quit()
 
-"""
-Self-improvement before I forget: 
-
-1.Make class methods more self-contained and not reliant on globals such as:
-
-    def Intro(self):
-        \"""Art for Intro.\"""
-        #Fade in
-
-        if not(self.ImageFade >= 255) and self.ImageFade_check == False:
-            self.ImageFade += self.ImageFade_plus
-            #print(self.ImageFade)
-
-        self.intro.set_alpha(self.ImageFade)
-
-        screen.blit(self.intro, (0, 0))
-        if self.ImageFade >= 60:
-            self.intro_door.set_alpha(self.ImageFade)
-            screen.blit(self.intro_door,(620,345))
-    
-    INTO:
-    
-    def Intro(self,screen):
-        \"""Art for Intro.\"""
-        #Fade in
-
-        if not(self.ImageFade >= 255) and self.ImageFade_check == False:
-            self.ImageFade += self.ImageFade_plus
-            #print(self.ImageFade)
-
-        self.intro.set_alpha(self.ImageFade)
-
-        screen.blit(self.intro, (0, 0))
-        if self.ImageFade >= 60:
-            self.intro_door.set_alpha(self.ImageFade)
-            screen.blit(self.intro_door,(620,345))
-    
-    The "screen" parameter replaces the global variable "screen" and makes it easier to import
-    the file as a subprogram while also making the class feel more like a true class variable.
-    
-    
-The reason I ,personally, want it to be more self-reliant is because it doesn't feel like
-a true object, it isn't self-contained as it is reliant on globals and the point of classes -
-as far as I can tell - is to try and make things more local so that one small change doesn't
-affect the whole program and only affects the object , the class.
-
-2. Have a clear vision for what functions you are going to make so that you can create variabl-
-e names that portray more clearer the intent of the function.
-"""
